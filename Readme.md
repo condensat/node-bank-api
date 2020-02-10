@@ -1,5 +1,11 @@
 # Condenstat node-js Bank Api
 
+## Start node rpc exemple
+
+```bash
+    yarn rpc
+```
+
 ## Build `bank-api.js`
 
 ```bash
