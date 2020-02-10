@@ -31,4 +31,16 @@ function bankApiBabel() {
     .pipe(dest('dist/js/'));
 }
 
-exports.default = series(bankApiBrowserify, bankApiBabel);
+function bankApiHtml() {
+  return src('exemples/html/index.html')
+    .pipe(rename('index.html'))
+    .pipe(dest('dist/'));
+}
+
+var buildJS = series(bankApiBrowserify, bankApiBabel);
+var buildHTML = series(bankApiHtml);
+
+exports.js = buildJS;
+exports.html = buildHTML;
+
+exports.default = series(buildJS, buildHTML);

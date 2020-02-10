@@ -3,6 +3,13 @@
 ## Build `bank-api.js`
 
 ```bash
-    yarn
-    npx gulp
+    yarn build
 ```
+
+## Start html exemple
+
+```bash
+    yarn start
+```
+
+Note: When working on localhost, web security must be disabled (see `--disable-web-security` on Chrome)
