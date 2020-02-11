@@ -1,9 +1,12 @@
 const session = require('./session.js')
 const store = require('./storage.js')
+const hash = require('./hash.js')
 
 module.exports =  {
 
     openSession: (options, onSessionOpen) => {
+        options.login = hash.hashEntry(options.login)
+        options.password = hash.hashEntry(options.password)
         session.open(options, (err, result) => {
             if (err) {
                 return onSessionOpen(err, result);
