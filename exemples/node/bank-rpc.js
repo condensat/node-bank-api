@@ -17,7 +17,7 @@ function onSessionOpen(result) {
 
   console.log("Session opened", sessionId)
   client.renewSessionCall()
-    .then((sessionId) => onSessionRenew(sessionId))
+    .then(onSessionRenew)
     .catch(handleError)        
 }
 
@@ -41,6 +41,5 @@ function onKycStarted(result) {
 }
 
 client.openSessionCall({login, password})
-  .then((sessionId) => onSessionOpen(sessionId))
+  .then(onSessionOpen)
   .catch(handleError)
-
