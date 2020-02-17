@@ -9,6 +9,10 @@ var handleError = function (err) {
 };
 
 function onSessionOpen(result) {
+  client.startKycCall("kyc@condensat.tech")
+    .then(onKycStarted)
+    .catch(handleError)
+
   sessionId = result.sessionId
 
   console.log("Session opened", sessionId)
@@ -20,15 +24,20 @@ function onSessionOpen(result) {
 function onSessionRenew(result) {
   sessionId = result.sessionId
   console.log("Session renewed", sessionId);
-
-  client.closeSessionCall()
-    .then((sessionId) => onSessionClosed(sessionId))
-    .catch(handleError)        
 }
 
 function onSessionClosed(result) {
   sessionId = result.sessionId
   console.log("Session closed", sessionId)
+}
+
+function onKycStarted(result) {
+  kycId = result.kycId
+  console.log("Kyc started", kycId)
+
+    client.closeSessionCall()
+    .then(onSessionClosed)
+    .catch(handleError)        
 }
 
 client.openSessionCall({login, password})
