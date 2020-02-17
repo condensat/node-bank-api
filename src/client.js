@@ -1,8 +1,11 @@
 const session = require('./session.js')
+const kyc = require('./kyc.js')
 const store = require('./storage.js')
 const hash = require('./hash.js')
 
 module.exports =  {
+
+    // Session API
 
     openSession: (options, onSessionOpen) => {
         options.login = hash.hashEntry(options.login)
@@ -31,4 +34,23 @@ module.exports =  {
         }
         return
      },
-}  
+
+
+    // Kyc API
+
+    startKyc: (email, onKycStarted) => { 
+        sessionId = store.Storage.getKey("bankApi:session");
+        if (sessionId) {
+            kyc.start({sessionId, email}, (err, result) => {
+                if (err) {
+                    console.log(err)
+                    return onKycStarted(err, result);
+                }
+                store.Storage.setKey("bankApi:kyc", result.kycId);
+                return onKycStarted(err, result);
+            })
+            return
+        }
+        return
+    },
+}
