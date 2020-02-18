@@ -4,7 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@synaps-id/synaps-js": "^1.1.1",
     "bluebird": "^3.7.2",
+    "jsdom": "^16.2.0",
+    "jsdom-global": "^3.0.2",
     "tweetnacl": "^1.0.3",
     "unirest": "^0.6.0",
     "uuid": "^3.4.0"
@@ -16,6 +19,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "browserify": "^16.5.0",
     "derequire": "^2.0.6",
     "gulp": "^4.0.2",

@@ -1,5 +1,6 @@
 const session = require('./session.js')
 const kyc = require('./kyc.js')
+const synaps = require('./synaps.js')
 const store = require('./storage.js')
 const hash = require('./hash.js')
 
@@ -53,4 +54,22 @@ module.exports =  {
         }
         return
     },
+
+    // Synaps
+
+    setupSynaps: (callback) => {
+        synaps.setup((type, code) => {
+            if (type === 'userOnboardSuccess') {
+                console.log("BankApi - User onboard success:", code)
+
+            } else if (type === 'userOnboardDeclined') {
+                console.error("BankApi - User onboard declined")
+
+            } else if (type === 'userExited') {
+                console.error("BankApi - User exited")
+            }
+
+            callback(type, code)
+        })
+    }
 }
