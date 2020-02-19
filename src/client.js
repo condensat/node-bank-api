@@ -1,6 +1,7 @@
 'use strict';
 const session = require('./session.js');
 const kyc = require('./kyc.js');
+const user = require('./user.js');
 const synaps = require('./synaps.js');
 const store = require('./storage.js');
 const hash = require('./hash.js');
@@ -50,6 +51,24 @@ module.exports =  {
                 }
                 store.Storage.setKey("bankApi:kyc", result.kycId);
                 return onKycStarted(err, result);
+            });
+            return;
+        }
+        return;
+    },
+
+    // User API
+
+    userInfo: (onUserInfo) => { 
+        const sessionId = store.Storage.getKey("bankApi:session");
+        if (sessionId) {
+            user.info(sessionId, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return onUserInfo(err, result);
+                }
+                store.Storage.setKey("bankApi:email", result.email);
+                return onUserInfo(err, result);
             });
             return;
         }
