@@ -17,13 +17,25 @@ module.exports =  {
             if (err) {
                 return onSessionOpen(err, result);
             }
+
+            // store sessionId
             store.Storage.setKey("bankApi:session", result.sessionId);
-            return onSessionOpen(err, result);
+            // fetch user info before calling onSessionOpen
+            module.exports.userInfo((err, userInfo) => {
+                if (err) {
+                    console.log(err);
+                    return onSessionOpen(err, result);
+                }
+                if (userInfo.email) {
+                    result["email"] = userInfo.email;
+                }
+                return onSessionOpen(err, result);
+            });
         });
     },
 
     renewSession: (onSessionRenew) => {
-        var sessionId = store.Storage.getKey("bankApi:session");
+        const sessionId = store.Storage.getKey("bankApi:session");
         if (sessionId) {
             return session.renew(sessionId, onSessionRenew);
         }
@@ -31,7 +43,7 @@ module.exports =  {
     },
 
     closeSession: (onSessionClosed) => { 
-        var sessionId = store.Storage.remKey("bankApi:session");
+        const sessionId = store.Storage.remKey("bankApi:session");
         if (sessionId) {
             return session.close(sessionId, onSessionClosed);
         }
@@ -41,10 +53,10 @@ module.exports =  {
 
     // Kyc API
 
-    startKyc: (email, onKycStarted) => { 
-        var sessionId = store.Storage.getKey("bankApi:session");
+    startKyc: (email, synapsCode, onKycStarted) => { 
+        const sessionId = store.Storage.getKey("bankApi:session");
         if (sessionId) {
-            kyc.start({sessionId, email}, (err, result) => {
+            kyc.start({sessionId, email, synapsCode}, (err, result) => {
                 if (err) {
                     console.log(err);
                     return onKycStarted(err, result);
@@ -77,7 +89,7 @@ module.exports =  {
 
     // Synaps
 
-    setupSynaps: (callback) => {
+    setupSynaps: (onSynapsEnd) => {
         synaps.setup((type, code) => {
             if (type === 'userOnboardSuccess') {
                 console.log("BankApi - User onboard success:", code);
@@ -87,9 +99,22 @@ module.exports =  {
 
             } else if (type === 'userExited') {
                 console.error("BankApi - User exited");
-            }
 
-            callback(type, code);
+                const email = store.Storage.getKey("bankApi:email");
+                if (!code) {
+                    code = "42"; // Todo: remove me, mock synaps onboarding code for now
+                }
+
+                module.exports.startKyc(email, code, (err, result) => {
+                    if (err != null) {
+                        console.log("kyc.start failed.", err);
+                        onSynapsEnd('kyc.start failed');
+                        return;
+                    }
+                    console.log("BankApi - startKyc:", result.kycId);
+                    onSynapsEnd(type, result.kycId);
+                });
+            }
         });
     }
 };

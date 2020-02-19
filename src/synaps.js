@@ -6,9 +6,10 @@ const SynapsClient = require('./synaps/synaps.js').default;
 
 module.exports =  {
     setup: (callback) => {
+        const email = store.Storage.getKey("bankApi:email");
         const client_id = 'S8185362279011737';
         const client = new SynapsClient(client_id);
-        client.init();
+        client.init({email});
         store.Storage.setKey("synaps:client", client);
 
         client.on('userOnboardSuccess', (code) => {

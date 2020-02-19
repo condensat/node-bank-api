@@ -5,20 +5,27 @@ const login = "demo";
 const password = "d3m0";
 
 var handleError = function (err) {
-  console.error(JSON.stringify(err, null, 0))
+  console.error("Error: ", JSON.stringify(err, null, 0))
 };
 
 function onSessionOpen(result) {
-  client.startKycCall("kyc@condensat.tech")
-    .then(onKycStarted)
-    .catch(handleError)
-
   sessionId = result.sessionId
-
   console.log("Session opened", sessionId)
-  client.renewSessionCall()
-    .then(onSessionRenew)
-    .catch(handleError)        
+
+  client.userInfoCall()
+    .then((userInfo) => {
+      console.log("User info:", JSON.stringify(userInfo, null, 0))
+
+      // start kyc
+      client.startKycCall(userInfo.email, "42")
+        .then(onKycStarted)
+        .catch(handleError)
+
+      client.renewSessionCall()
+        .then(onSessionRenew)
+        .catch(handleError)        
+    })
+    .catch(handleError)
 }
 
 function onSessionRenew(result) {
