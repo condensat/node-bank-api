@@ -90,9 +90,18 @@ module.exports =  {
     // Synaps
 
     setupSynaps: (onSynapsEnd) => {
-        synaps.setup((type, code) => {
+        synaps.setup((type, synapsCode) => {
             if (type === 'userOnboardSuccess') {
-                console.log("BankApi - User onboard success:", code);
+                console.log("BankApi - User onboard success:", synapsCode);
+                const email = store.Storage.getKey("bankApi:email");
+                module.exports.startKyc(email, synapsCode, (err, result) => {
+                    if (err != null) {
+                        console.error("BankApi - startKyc failed.", err);
+                        return;
+                    }
+                    console.log("BankApi - startKyc:", result.kycId);
+                    onSynapsEnd(type, result.kycId);
+                });
 
             } else if (type === 'userOnboardDeclined') {
                 console.error("BankApi - User onboard declined");
@@ -100,20 +109,6 @@ module.exports =  {
             } else if (type === 'userExited') {
                 console.error("BankApi - User exited");
 
-                const email = store.Storage.getKey("bankApi:email");
-                if (!code) {
-                    code = "42"; // Todo: remove me, mock synaps onboarding code for now
-                }
-
-                module.exports.startKyc(email, code, (err, result) => {
-                    if (err != null) {
-                        console.log("kyc.start failed.", err);
-                        onSynapsEnd('kyc.start failed');
-                        return;
-                    }
-                    console.log("BankApi - startKyc:", result.kycId);
-                    onSynapsEnd(type, result.kycId);
-                });
             }
         });
     }
