@@ -13,6 +13,7 @@
     "uuid": "^3.4.0"
   },
   "scripts": {
+    "lint": "npx eslint src/*js",
     "rpc": "node exemples/node/bank-rpc.js",
     "build": "npx gulp",
     "start": "npx lite-server --baseDir='dist'"
@@ -22,6 +23,12 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "browserify": "^16.5.0",
     "derequire": "^2.0.6",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-babel-minify": "^0.5.1",

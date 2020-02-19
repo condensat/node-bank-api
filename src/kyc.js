@@ -1,3 +1,4 @@
+'use strict';
 const rpc = require('./rpc.js');
 
 module.exports =  {
@@ -5,6 +6,6 @@ module.exports =  {
     const params = [options];
     const request = rpc.createRequest(rpc.getEndpoint('/kyc'), "kyc.Start", params);
 
-    rpc.postRequest(request, callback)
+    rpc.postRequest(request, callback);
   },
-}
+};

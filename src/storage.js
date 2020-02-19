@@ -11,15 +11,14 @@ const Storage = (function() {
       },
 
       remKey: (key) => {
-        val = data_store[key];
-        delete data_store[key]
-        return val
+        var val = data_store[key];
+        delete data_store[key];
+        return val;
       },
-    }
-  
+    };
   })();
 
   module.exports = {
     Storage: Storage
-  }
+  };
   
