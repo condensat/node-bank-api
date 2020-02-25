@@ -64,8 +64,7 @@ function bankApiBabel() {
 }
 
 function bankApiHtml() {
-  return src('exemples/html/index.html')
-    .pipe(rename('index.html'))
+  return src('exemples/html/**/*')
     .pipe(dest('dist/'));
 }
 
