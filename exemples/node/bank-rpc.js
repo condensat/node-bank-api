@@ -31,6 +31,10 @@ function onSessionOpen(result) {
 function onSessionRenew(result) {
   sessionId = result.sessionId
   console.log("Session renewed", sessionId);
+
+  client.closeSessionCall()
+    .then(onSessionClosed)
+    .catch(handleError)        
 }
 
 function onSessionClosed(result) {
@@ -41,10 +45,6 @@ function onSessionClosed(result) {
 function onKycStarted(result) {
   kycId = result.kycId
   console.log("Kyc started", kycId)
-
-    client.closeSessionCall()
-    .then(onSessionClosed)
-    .catch(handleError)        
 }
 
 client.openSessionCall({login, password})
