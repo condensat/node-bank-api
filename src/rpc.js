@@ -36,10 +36,18 @@ module.exports = {
       return {
         type: "POST",
         url: endpoint,
-        crossDomain: true,
         contentType: "application/json",
         dataType: "json",
         data: rpcBody(id, method, params),
+
+        crossDomain: true,
+        withCredentials: true,
+        xhrFields: {
+          withCredentials: true
+        },
+        beforeSend: function (xhr) {
+          xhr.withCredentials = true;
+        }
       };
     },
 
