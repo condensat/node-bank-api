@@ -52,14 +52,14 @@ module.exports = {
     },
 
     postRequest: (requestData, callback) => {
-      const request = $.ajax(requestData);
-      request
-        .then((body, textStatus, response) => {
-          handleRequest(null, { status: textStatus, statusCode: response.status }, body, callback);
-        })
-        .catch((response, textStatus, err) => {
-          handleRequest(err, { status: textStatus, statusCode: response.status }, response.responseJSON, callback);
-        });
+      requestData.success = (body, status, xhr) => {
+        handleRequest(null, { status, statusCode: xhr.status }, body, callback);
+      }
+      requestData.error = (xhr, status, error) => {
+        handleRequest(error, { status, statusCode: xhr.status }, xhr.responseJSON, callback);
+      }
+      
+      $.ajax(requestData);
     },
 };
 
