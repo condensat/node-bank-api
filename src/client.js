@@ -18,8 +18,6 @@ module.exports =  {
                 return onSessionOpen(err, result);
             }
 
-            // store sessionId
-            store.Storage.setKey("bankApi:session", result.sessionId);
             // fetch user info before calling onSessionOpen
             module.exports.userInfo((err, userInfo) => {
                 if (err) {
@@ -35,19 +33,11 @@ module.exports =  {
     },
 
     renewSession: (onSessionRenew) => {
-        const sessionId = store.Storage.getKey("bankApi:session");
-        if (sessionId) {
-            return session.renew(sessionId, onSessionRenew);
-        }
-        return;
+        return session.renew(onSessionRenew);
     },
 
     closeSession: (onSessionClosed) => { 
-        const sessionId = store.Storage.remKey("bankApi:session");
-        if (sessionId) {
-            return session.close(sessionId, onSessionClosed);
-        }
-        return;
+        return session.close(onSessionClosed);
      },
 
 
@@ -72,20 +62,16 @@ module.exports =  {
     // User API
 
     userInfo: (onUserInfo) => { 
-        const sessionId = store.Storage.getKey("bankApi:session");
-        if (sessionId) {
-            user.info(sessionId, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    return onUserInfo(err, result);
-                }
-                store.Storage.setKey("bankApi:email", result.email);
+        user.info((err, result) => {
+            if (err) {
+                console.log(err);
                 return onUserInfo(err, result);
-            });
-            return;
-        }
+            }
+            store.Storage.setKey("bankApi:email", result.email);
+            return onUserInfo(err, result);
+        });
         return;
-    },
+        sessionId    },
 
     // Synaps
 
