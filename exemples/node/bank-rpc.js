@@ -5,16 +5,27 @@ const login = "demo";
 const password = "d3m0";
 
 var handleError = function (err) {
-  console.error(JSON.stringify(err, null, 0))
+  console.error("Error: ", JSON.stringify(err, null, 0))
 };
 
 function onSessionOpen(result) {
   sessionId = result.sessionId
-
   console.log("Session opened", sessionId)
-  client.renewSessionCall()
-    .then((sessionId) => onSessionRenew(sessionId))
-    .catch(handleError)        
+
+  client.userInfoCall()
+    .then((userInfo) => {
+      console.log("User info:", JSON.stringify(userInfo, null, 0))
+
+      // start kyc
+      client.startKycCall(userInfo.email, "42")
+        .then(onKycStarted)
+        .catch(handleError)
+
+      client.renewSessionCall()
+        .then(onSessionRenew)
+        .catch(handleError)        
+    })
+    .catch(handleError)
 }
 
 function onSessionRenew(result) {
@@ -22,7 +33,7 @@ function onSessionRenew(result) {
   console.log("Session renewed", sessionId);
 
   client.closeSessionCall()
-    .then((sessionId) => onSessionClosed(sessionId))
+    .then(onSessionClosed)
     .catch(handleError)        
 }
 
@@ -31,7 +42,11 @@ function onSessionClosed(result) {
   console.log("Session closed", sessionId)
 }
 
-client.openSessionCall({login, password})
-  .then((sessionId) => onSessionOpen(sessionId))
-  .catch(handleError)
+function onKycStarted(result) {
+  kycId = result.kycId
+  console.log("Kyc started", kycId)
+}
 
+client.openSessionCall({login, password})
+  .then(onSessionOpen)
+  .catch(handleError)

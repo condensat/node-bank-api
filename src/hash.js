@@ -1,10 +1,10 @@
-const nacl = require("tweetnacl")
-
+'use strict';
+const nacl = require("tweetnacl");
 
 module.exports =  {
     hashEntry: (message) => {
-        data = Buffer.from(message, 'utf-8');
-        hash = nacl.hash(data)
+        var data = Buffer.from(message, 'utf-8');
+        var hash = nacl.hash(data);
         return Buffer.from(hash).toString("hex");
-    },
-}
+    }
+};

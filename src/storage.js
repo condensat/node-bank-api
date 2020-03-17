@@ -1,38 +1,24 @@
 const Storage = (function() {
     var data_store = {};
   
-    var getDataStore = function() {
-      return data_store;
-    };
-  
-    var setDataStore = function(dataStore) {
-        data_store = dataStore;     
-    };
-  
     return {
       getKey: (key) => {
-        data = getDataStore();
-        return data[key];
+        return data_store[key];
       },
 
       setKey: (key, value) => {
-        data = getDataStore();
-        data[key] = value;
-        setDataStore(data);
+        data_store[key] = value;
       },
 
       remKey: (key) => {
-        data = getDataStore();
-        val = data[key];
-        delete data[key]
-        setDataStore(data);
-        return val
+        var val = data_store[key];
+        delete data_store[key];
+        return val;
       },
-    }
-  
+    };
   })();
 
   module.exports = {
     Storage: Storage
-  }
+  };
   

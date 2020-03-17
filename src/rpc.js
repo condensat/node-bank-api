@@ -1,17 +1,21 @@
-const unirest = require('unirest');
+'use strict';
+const $ = global.$ ? global.$ : require('./dom.js');
 const uuidv4 = require('uuid/v4');
 
-const endpoint = 'https://bank.condensat.space/api/v1' 
+const endpoint = 'https://bank.condensat.space/api/v1';
 
 function handleRequest(error, result, response, callback) {
+  if (!response) response = {};
+  if (response.error) error = response.error;
+
   if (error) {
     var statusCode = result ? result.statusCode : "N/A";
     callback({error, statusCode}, null);
-    return
+    return;
   }
   if (result.statusCode != 200) {
     callback({error: response.error, statusCode: result.statusCode}, null);
-    return
+    return;
   }
   callback(null, response ? response.result : null);
 }
@@ -22,26 +26,32 @@ function rpcBody(id, method, params) {
     id: id ? id : uuidv4(),
     method: method,
     params: params,
-  }, null, 0)
+  }, null, 0);
 }
 
-module.exports =  {
-    getEndpoint: (suffix) => { return endpoint+suffix },
+module.exports = {
+    getEndpoint: (suffix) => { return endpoint+suffix; },
 
     createRequest: (endpoint, method, params, id) => {
-      return unirest
-        .post(endpoint)
-        .headers({"content-type": "application/json"})
-        .send(rpcBody(id, method, params))
+      return {
+        type: "POST",
+        url: endpoint,
+        crossDomain: true,
+        contentType: "application/json",
+        dataType: "json",
+        data: rpcBody(id, method, params),
+      };
     },
 
-    postRequest:(request, callback) => {
+    postRequest: (requestData, callback) => {
+      const request = $.ajax(requestData);
       request
-        .then((response) => {
-          handleRequest(null, response, response.body, callback)
+        .then((body, textStatus, response) => {
+          handleRequest(null, { status: textStatus, statusCode: response.status }, body, callback);
         })
-        .catch((err) => {
-          handleRequest(err, null, null, callback)
-        })
+        .catch((response, textStatus, err) => {
+          handleRequest(err, { status: textStatus, statusCode: response.status }, response.responseJSON, callback);
+        });
     },
-}  
+};
+
