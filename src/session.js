@@ -11,15 +11,15 @@ module.exports =  {
     rpc.postRequest(request, callback);
   },
 
-  renew: (sessionId, callback) => {
-    const params = [{sessionId}];
+  renew: (callback) => {
+    const params = [];
     const request = rpc.createRequest(rpc.getEndpoint('/session'), "session.Renew", params);
 
     rpc.postRequest(request, callback);
   },
 
-  close: (sessionId, callback) => {
-    const params = [{sessionId}];
+  close: (callback) => {
+    const params = [];
     const request = rpc.createRequest(rpc.getEndpoint('/session'), "session.Close", params);
 
     rpc.postRequest(request, callback);
