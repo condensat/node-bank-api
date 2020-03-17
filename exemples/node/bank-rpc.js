@@ -1,4 +1,6 @@
 const Promise = require('bluebird');
+const moment = require('moment');
+
 const client = Promise.promisifyAll(require('../../src/client.js'), {suffix: "Call"});
 
 const login = "demo";
@@ -9,17 +11,12 @@ var handleError = function (err) {
 };
 
 function onSessionOpen(result) {
-  sessionId = result.sessionId
-  console.log("Session opened", sessionId)
+  validUntil = moment(result.valid_until)
+  console.log("Session opened", validUntil.diff(moment(), 'seconds'))
 
   client.userInfoCall()
     .then((userInfo) => {
       console.log("User info:", JSON.stringify(userInfo, null, 0))
-
-      // start kyc
-      client.startKycCall(userInfo.email, "42")
-        .then(onKycStarted)
-        .catch(handleError)
 
       client.renewSessionCall()
         .then(onSessionRenew)
@@ -29,8 +26,8 @@ function onSessionOpen(result) {
 }
 
 function onSessionRenew(result) {
-  sessionId = result.sessionId
-  console.log("Session renewed", sessionId);
+  validUntil = moment(result.valid_until)
+  console.log("Session renewed", validUntil.diff(moment(), 'seconds'));
 
   client.closeSessionCall()
     .then(onSessionClosed)
@@ -38,13 +35,8 @@ function onSessionRenew(result) {
 }
 
 function onSessionClosed(result) {
-  sessionId = result.sessionId
-  console.log("Session closed", sessionId)
-}
-
-function onKycStarted(result) {
-  kycId = result.kycId
-  console.log("Kyc started", kycId)
+  validUntil = moment(result.valid_until)
+  console.log("Session closed", validUntil.diff(moment(), 'seconds'))
 }
 
 client.openSessionCall({login, password})

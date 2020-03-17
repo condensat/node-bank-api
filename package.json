@@ -9,6 +9,7 @@
     "jquery": "^3.4.1",
     "jsdom": "^16.2.0",
     "jsdom-global": "^3.0.2",
+    "moment": "^2.24.0",
     "tweetnacl": "^1.0.3",
     "uuid": "^3.4.0"
   },
