@@ -2,6 +2,7 @@
 const session = require('./session.js');
 const kyc = require('./kyc.js');
 const user = require('./user.js');
+const accounting = require('./accounting.js');
 const synaps = require('./synaps.js');
 const store = require('./storage.js');
 const hash = require('./hash.js');
@@ -71,7 +72,29 @@ module.exports =  {
             return onUserInfo(err, result);
         });
         return;
-        sessionId    },
+    },
+
+    // Accounting
+
+    accountList: (onAccountList) => {
+        accounting.list((err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onAccountList(err, result);
+        });
+    },
+
+    accountHistory: (options, onAccountHistory) => {
+        accounting.history(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onAccountHistory(err, result);
+        });
+    },
 
     // Synaps
 

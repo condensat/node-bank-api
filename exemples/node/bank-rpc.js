@@ -29,10 +29,36 @@ function onSessionRenew(result) {
   validUntil = moment(result.valid_until)
   console.log("Session renewed", validUntil.diff(moment(), 'seconds'));
 
-  client.closeSessionCall()
-    .then(onSessionClosed)
-    .catch(handleError)        
+  client.accountListCall()
+    .then(onAccountList)
+    .catch(handleError)     
 }
+
+function onAccountList(result) {
+  console.log("Account list:", JSON.stringify(result, "\n", 2))
+
+  Promise.each(result.accounts, function (account) {
+
+    accountId = account.accountId;
+    last = moment(account.timestamp);
+    to = last.valueOf();
+    from = last.subtract(1, 'day').valueOf();
+
+    return client.accountHistoryCall({accountId, from, to})
+      .then(onAccountHistory)
+      .catch(handleError)
+
+  }).then(function () {
+    client.closeSessionCall()
+      .then(onSessionClosed)
+      .catch(handleError)        
+  });
+}
+
+function onAccountHistory(result) {
+  console.log("Account History:", JSON.stringify(result, "\n", 2))
+}
+
 
 function onSessionClosed(result) {
   validUntil = moment(result.valid_until)
