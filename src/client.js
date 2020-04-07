@@ -76,8 +76,8 @@ module.exports =  {
 
     // Accounting
 
-    accountList: (onAccountList) => {
-        accounting.list((err, result) => {
+    accountList: (options, onAccountList) => {
+        accounting.list(options, (err, result) => {
             if (err) {
                 console.log(err);
             }

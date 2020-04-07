@@ -29,7 +29,7 @@ function onSessionRenew(result) {
   validUntil = moment(result.valid_until)
   console.log("Session renewed", validUntil.diff(moment(), 'seconds'));
 
-  client.accountListCall()
+  client.accountListCall({rateBase: "CHF"})
     .then(onAccountList)
     .catch(handleError)     
 }

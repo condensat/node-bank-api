@@ -2,8 +2,8 @@
 const rpc = require('./rpc.js');
 
 module.exports =  {
-  list: (callback) => {
-    const params = [];
+  list: (options, callback) => {
+    const params = [options];
     const request = rpc.createRequest(rpc.getEndpoint('/accounting'), "accounting.List", params);
 
     rpc.postRequest(request, callback);
