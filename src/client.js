@@ -3,6 +3,7 @@ const session = require('./session.js');
 const kyc = require('./kyc.js');
 const user = require('./user.js');
 const accounting = require('./accounting.js');
+const wallet = require('./wallet.js');
 const synaps = require('./synaps.js');
 const store = require('./storage.js');
 const hash = require('./hash.js');
@@ -95,6 +96,19 @@ module.exports =  {
             return onAccountHistory(err, result);
         });
     },
+
+    // Wallet
+
+    walletNextDeposit:  (options, onNextDeposit) => {
+        wallet.nextDeposit(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onNextDeposit(err, result);
+        });
+    },
+
 
     // Synaps
 
