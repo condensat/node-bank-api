@@ -3,6 +3,8 @@ const session = require('./session.js');
 const kyc = require('./kyc.js');
 const user = require('./user.js');
 const accounting = require('./accounting.js');
+const wallet = require('./wallet.js');
+const swap = require('./swap.js');
 const synaps = require('./synaps.js');
 const store = require('./storage.js');
 const hash = require('./hash.js');
@@ -93,6 +95,69 @@ module.exports =  {
             }
 
             return onAccountHistory(err, result);
+        });
+    },
+
+    // Wallet
+
+    walletNextDeposit:  (options, onNextDeposit) => {
+        wallet.nextDeposit(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onNextDeposit(err, result);
+        });
+    },
+
+    // Swap
+
+    swapPropose: (options, onSwapPropose) => {
+        swap.propose(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onSwapPropose(err, result);
+        });
+    },
+
+    swapInfo: (options, onSwapInfo) => {
+        swap.info(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            try {
+                result.info = JSON.parse(result.payload)
+            } catch (e) {}
+
+            return onSwapInfo(err, result);
+        });
+    },
+
+    swapFinalize: (options, onSwapFinalize) => {
+        swap.finalize(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            if (result && result.payload) {
+                try {
+                    result.info = JSON.parse(result.payload)
+                } catch (e) {}
+            }
+            return onSwapFinalize(err, result);
+        });
+    },
+
+    swapAccept: (options, onSwapAccept) => {
+        swap.accept(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onSwapAccept(err, result);
         });
     },
 

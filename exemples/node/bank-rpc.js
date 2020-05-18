@@ -40,6 +40,15 @@ function onAccountList(result) {
   Promise.each(result.accounts, function (account) {
 
     accountId = account.accountId;
+
+    if (account.curency.isCrypto) {
+      client.walletNextDepositCall({ accountId })
+        .then(function (result) {
+          console.log("Next Deposit:", result);
+        })
+        .catch(handleError);
+    } 
+
     last = moment(account.timestamp);
     to = last.valueOf();
     from = last.subtract(1, 'day').valueOf();
