@@ -110,6 +110,37 @@ module.exports =  {
         });
     },
 
+    walletSendFunds:  (options, onSendFunds) => {
+        wallet.sendFunds(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onSendFunds(err, result);
+        });
+    },
+
+    walletCancelWithdraw:  (options, onCancelWithdraw) => {
+        wallet.cancelWithdraw(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onCancelWithdraw(err, result);
+        });
+    },
+
+    walletSendHistory:  (options, onSendHistory) => {
+        wallet.sendHistory(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onSendHistory(err, result);
+        });
+    },
+    
+
     // Swap
 
     swapPropose: (options, onSwapPropose) => {
