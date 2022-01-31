@@ -4,8 +4,9 @@ module.exports =  {
   open: (options, callback) => {
     const login = options.login;
     const password = options.password;
+    const totp = options.totp;
 
-    const params = [{login, password}];
+    const params = [{login, password, totp}];
     const request = rpc.createRequest(rpc.getEndpoint('/session'), "session.Open", params);
 
     rpc.postRequest(request, callback);
