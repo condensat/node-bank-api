@@ -2,9 +2,11 @@
 const $ = global.$ ? global.$ : require('./dom.js');
 const uuidv4 = require('uuid/v4');
 
+const port = '4242'
+
 const endpoint = document.location.hostname.endsWith('.onion')
   ? 'http://'+document.location.hostname+'/api/v1'
-  : 'https://bank.condensat.space/api/v1';
+  : 'http://bank.condensat.space:' + port + '/api/v1';
 
 function handleRequest(error, result, response, callback) {
   if (!response) response = {};

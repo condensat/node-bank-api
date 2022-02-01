@@ -1,14 +1,26 @@
 const Promise = require('bluebird');
 const moment = require('moment');
+// const session = Promise.promisifyAll(require('../../src/session.js'));
+// const prompt = require('prompt');
 
 const client = Promise.promisifyAll(require('../../src/client.js'), {suffix: "Call"});
 
-const login = "demo";
-const password = "d3m0";
+const login = "1909006945";
+const password = "";
+const totp = '';
 
 var handleError = function (err) {
   console.error("Error: ", JSON.stringify(err, null, 0))
 };
+
+// const totp = function () {
+//   prompt.start()
+
+//   prompt.get(['totp'], function (err, totp) {
+//     if (err) { return ''; }
+//     return totp
+//   });
+// }
 
 function onSessionOpen(result) {
   validUntil = moment(result.valid_until)
@@ -74,6 +86,6 @@ function onSessionClosed(result) {
   console.log("Session closed", validUntil.diff(moment(), 'seconds'))
 }
 
-client.openSessionCall({login, password})
+client.openSessionCall({login, password, totp})
   .then(onSessionOpen)
   .catch(handleError)
