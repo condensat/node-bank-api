@@ -5,9 +5,14 @@ const moment = require('moment');
 
 const client = Promise.promisifyAll(require('../../src/client.js'), {suffix: "Call"});
 
-const login = "1909006945";
-const password = "";
-const totp = '';
+// const login = "8868029921";
+// const password = "";
+// const totp = '';
+const currency = "EUR"
+const amount = Math.floor(Math.random() * 10000) / 100.0
+const accountId = ""
+const iban = "CH5604835012345678009"
+const bic = "KBAGCH22XXX"
 
 var handleError = function (err) {
   console.error("Error: ", JSON.stringify(err, null, 0))
@@ -80,12 +85,15 @@ function onAccountHistory(result) {
   console.log("Account History:", JSON.stringify(result, "\n", 2))
 }
 
+function onFiatWithdraw(result) {
+  console.log("Fiat Withdraw ID: ", JSON.stringify(result, "\n", 2))
+}
 
 function onSessionClosed(result) {
   validUntil = moment(result.valid_until)
   console.log("Session closed", validUntil.diff(moment(), 'seconds'))
 }
 
-client.openSessionCall({login, password, totp})
-  .then(onSessionOpen)
+client.fiatWithdrawCall({amount, currency, accountId, iban, bic})
+  .then(onFiatWithdraw)
   .catch(handleError)
