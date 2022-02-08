@@ -16,9 +16,11 @@ module.exports =  {
 
     openSession: (options, onSessionOpen) => {
         options.login = hash.hashEntry(options.login);
-        // options.password = hash.hashEntry(options.password);
-        options.password = options.password;
-        options.totp = options.totp;
+        if (options.totp.length > 0) {
+            options.password = "";
+        } else {
+            options.password = hash.hashEntry(options.password);
+        }
         session.open(options, (err, result) => {
             if (err) {
                 return onSessionOpen(err, result);
