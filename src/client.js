@@ -8,6 +8,7 @@ const swap = require('./swap.js');
 const synaps = require('./synaps.js');
 const store = require('./storage.js');
 const hash = require('./hash.js');
+const fiat = require('./fiat.js');
 
 module.exports =  {
 
@@ -216,5 +217,17 @@ module.exports =  {
 
             }
         });
-    }
+    },
+
+    // fiat
+
+    fiatWithdraw: (options, onFiatWithdraw) => {
+        fiat.withdraw(options, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+
+            return onFiatWithdraw(err, result);
+        });
+    },
 };
