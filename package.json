@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@synaps-id/synaps-js": "^1.1.1",
     "bluebird": "^3.7.2",
     "jquery": "^3.4.1",
     "jsdom": "^16.2.0",
@@ -17,7 +16,6 @@
     "lint": "npx eslint src/**/*.js",
     "rpc": "node exemples/node/bank-rpc.js",
     "swap": "node exemples/node/condensat-swap.js",
-    "synaps": "npx babel --plugins transform-es2015-modules-commonjs node_modules/@synaps-id/synaps-js/index.js > src/synaps/synaps.js", 
     "clean": "rm -rf ./dist",
     "dist": "npx parcel build src/index.js"
   },
